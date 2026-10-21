@@ -1,0 +1,52 @@
+--- type-handl -- regression coverage for the `type` module surface.
+---
+--- `type` resolves to the canonical module (`kit-core`'s
+--- `build_type_module`), whose record is this repo's `type-handl.hnl`.
+--- The module record used to inline `{"__tag__": ...}` type-value
+--- literals; the eval `object` op rejects reserved keys (ADR-0055), so
+--- evaluating the record failed with `object: key '__tag__' is reserved`
+--- and every pure-handl predicate below errored. The constants are now
+--- minted by the native `type.<Name>` ops.
+
+test_of := assert type.of(["a"]) = "array"
+
+test_is_array := assert type.is_array(["a", "b"]) = true
+
+test_is_array_neg := assert type.is_array("a") = false
+
+test_is_null := assert type.is_null(null) = true
+
+test_is_string := assert type.is_string("x") = true
+
+test_is_number := assert type.is_number(3) = true
+
+test_is_bool := assert type.is_bool(false) = true
+
+test_is_object := assert type.is_object({ "a": 1 }) = true
+
+test_is_alias := assert type.is([1], "arr") = true
+
+test_may := assert type.may([1], "arr") = [1]
+
+test_not := assert type.not("x", "number") = "x"
+
+test_when := assert type.when("x", "number", 0) = 0
+
+test_to_bool := assert type.to_bool([]) = false
+
+test_tag_alias := assert type.tag(1) = "number"
+
+test_default := assert type.default(null, 7) = 7
+
+test_identity := assert type.identity(9) = 9
+
+--- type constants are host-minted `{__tag__, __registry__, kind}` records
+--- (asserted per-field: a `__tag__` literal here would be a forgery
+--- attempt and is rejected by the object-literal reserved-key guard)
+test_int_tag := assert type.Int().__tag__ = "int"
+
+test_int_registry := assert type.Int().__registry__ = "type"
+
+test_int_kind := assert type.Int().kind = "primitive"
+
+test_str_alias := assert type.Str() = type.String()
