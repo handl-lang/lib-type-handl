@@ -83,12 +83,20 @@ do {
     _: k
   }
 
-  -- kind_is -- the `type.is` semantics over canonical tags.
-  kind_is :: [v, kind] ~> match canon_kind(kind) {
-    "any": true,
-    "never": false,
-    k: type.of(v) == k
-  }
+  -- kind_is -- the `type.is` semantics over canonical tags. ADR-0154
+  -- §2: a *nominal* kind argument (`{"__sym__": ...}`) is a type, not a
+  -- kind spelling -- `type.is(v, T)` = `type.instanceof(v, T)` (v's
+  -- `type` link head, then the `parent` <: walk).
+  kind_is :: [v, kind] ~>
+    if type.is_nominal(kind) {
+      type.instanceof(v, kind)
+    } else {
+      match canon_kind(kind) {
+        "any": true,
+        "never": false,
+        k: type.of(v) == k
+      }
+    }
 
   {
     -- ---- predicates -------------------------------------------------
@@ -140,11 +148,13 @@ do {
     },
 
     -- ---- type values ------------------------------------------------
-    -- Builtin type constants `{"__tag__": t, "__registry__": "type",
-    -- "kind": "primitive"}`. `__tag__`/`__registry__` are reserved keys a
-    -- handl object literal cannot construct (the eval `object` op rejects
-    -- them -- ADR-0055 forgery prevention, ADR-0054), so these fields call
-    -- the host-minted `type.<Name>` ops instead of writing the literal.
+    -- Builtin type constants — since WS-E (ADR-0154 §1/§2) these are
+    -- seeded nominals `{"__sym__": {handle, name, parent, type}}`: the
+    -- deterministic handle is a content hash of the `type.<Name>` seed,
+    -- `parent` encodes <: (`Nat <: Int <: Number <: Value`), `type`
+    -- encodes membership (`Int.ty = Type`). `__sym__` is a reserved key
+    -- a handl object literal cannot construct, so these fields call the
+    -- host-minted `type.<Name>` ops.
     Int: type.Int(),
     Number: type.Number(),
     Float: type.Float(),
@@ -155,6 +165,8 @@ do {
     Null: type.Null(),
     Obj: type.Obj(),
     Array: type.Array(),
-    Value: type.Value()
+    Value: type.Value(),
+    Type: type.Type(),
+    Unit: type.Unit()
   }
 }

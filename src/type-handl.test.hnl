@@ -40,13 +40,40 @@ test_default := assert type.default(null, 7) = 7
 
 test_identity := assert type.identity(9) = 9
 
---- type constants are host-minted `{__tag__, __registry__, kind}` records
---- (asserted per-field: a `__tag__` literal here would be a forgery
---- attempt and is rejected by the object-literal reserved-key guard)
-test_int_tag := assert type.Int().__tag__ = "int"
+--- type constants are host-minted seeded nominals `{"__sym__": {handle,
+--- name, parent, type}}` (ADR-0154 §1/§2): deterministic identity, `parent`
+--- is <: and `type` is the membership link.
+test_int_nominal := assert type.is_nominal(type.Int()) = true
 
-test_int_registry := assert type.Int().__registry__ = "type"
+test_int_name := assert type.Int().__sym__.name = "Int"
 
-test_int_kind := assert type.Int().kind = "primitive"
+test_int_seeded_idempotent := assert type.Int() = type.Int()
 
 test_str_alias := assert type.Str() = type.String()
+
+--- ADR-0154 §2 reads: `x : T` = `type` link then `parent` walk.
+test_instanceof_subtyping := assert type.instanceof(type.Nat(), type.Int()) = true
+
+test_instanceof_transitive := assert type.instanceof(type.Nat(), type.Number()) = true
+
+test_instanceof_negative := assert type.instanceof(type.Int(), type.Float()) = false
+
+test_instanceof_type_link := assert type.instanceof(type.Int(), type.Type()) = true
+
+test_instanceof_literal_nat := assert type.instanceof(1, type.Nat()) = true
+
+test_instanceof_literal_int := assert type.instanceof(-1, type.Int()) = true
+
+test_instanceof_literal_neg := assert type.instanceof(-1, type.Nat()) = false
+
+test_instanceof_literal_float := assert type.instanceof(1.5, type.Float()) = true
+
+test_is_nominal_kind := assert type.is(1, type.Nat()) = true
+
+test_is_nominal_kind_neg := assert type.is(1, type.Float()) = false
+
+test_must_nominal := assert type.must(1, type.Number()) = { ok: 1 }
+
+test_ty_literal := assert type.ty(1) = type.Nat()
+
+test_ty_link := assert type.ty(type.Int()) = type.Type()
