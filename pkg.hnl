@@ -1,2 +1,2 @@
 -- lib-type-handl: package manifest.
-{ modules: ["type-handl"] }
+{ modules: ["type-handl"], description: "Pure-handl type predicates and kind guards.", license: "MIT" }
