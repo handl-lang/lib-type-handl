@@ -167,6 +167,7 @@ do {
     Array: type.Array(),
     Value: type.Value(),
     Type: type.Type(),
+    Grade: type.Grade(),
     Unit: type.Unit()
   }
 }
