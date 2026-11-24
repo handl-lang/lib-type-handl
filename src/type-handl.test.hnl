@@ -8,72 +8,72 @@
 --- and every pure-handl predicate below errored. The constants are now
 --- minted by the native `type.<Name>` ops.
 
-test_of := assert type.of(["a"]) = "array"
+test_of := assert type.of(["a"]) == "array"
 
-test_is_array := assert type.is_array(["a", "b"]) = true
+test_is_array := assert type.is_array(["a", "b"]) == true
 
-test_is_array_neg := assert type.is_array("a") = false
+test_is_array_neg := assert type.is_array("a") == false
 
-test_is_null := assert type.is_null(null) = true
+test_is_null := assert type.is_null(null) == true
 
-test_is_string := assert type.is_string("x") = true
+test_is_string := assert type.is_string("x") == true
 
-test_is_number := assert type.is_number(3) = true
+test_is_number := assert type.is_number(3) == true
 
-test_is_bool := assert type.is_bool(false) = true
+test_is_bool := assert type.is_bool(false) == true
 
-test_is_object := assert type.is_object({ "a": 1 }) = true
+test_is_object := assert type.is_object({ "a": 1 }) == true
 
-test_is_alias := assert type.is([1], "arr") = true
+test_is_alias := assert type.is([1], "arr") == true
 
-test_may := assert type.may([1], "arr") = [1]
+test_may := assert type.may([1], "arr") == [1]
 
-test_not := assert type.not("x", "number") = "x"
+test_not := assert type.not("x", "number") == "x"
 
-test_when := assert type.when("x", "number", 0) = 0
+test_when := assert type.when("x", "number", 0) == 0
 
-test_to_bool := assert type.to_bool([]) = false
+test_to_bool := assert type.to_bool([]) == false
 
-test_tag_alias := assert type.tag(1) = "number"
+test_tag_alias := assert type.tag(1) == "number"
 
-test_default := assert type.default(null, 7) = 7
+test_default := assert type.default(null, 7) == 7
 
-test_identity := assert type.identity(9) = 9
+test_identity := assert type.identity(9) == 9
 
 --- type constants are host-minted seeded nominals `{"__sym__": {handle,
 --- name, parent, type}}` (ADR-0154 §1/§2): deterministic identity, `parent`
 --- is <: and `type` is the membership link.
-test_int_nominal := assert type.is_nominal(type.Int()) = true
+test_int_nominal := assert type.is_nominal(type.Int()) == true
 
-test_int_name := assert type.Int().__sym__.name = "Int"
+test_int_name := assert type.Int().__sym__.name == "Int"
 
-test_int_seeded_idempotent := assert type.Int() = type.Int()
+test_int_seeded_idempotent := assert type.Int() == type.Int()
 
-test_str_alias := assert type.Str() = type.String()
+test_str_alias := assert type.Str() == type.String()
 
 --- ADR-0154 §2 reads: `x : T` = `type` link then `parent` walk.
-test_instanceof_subtyping := assert type.instanceof(type.Nat(), type.Int()) = true
+test_instanceof_subtyping := assert type.instanceof(type.Nat(), type.Int()) == true
 
-test_instanceof_transitive := assert type.instanceof(type.Nat(), type.Number()) = true
+test_instanceof_transitive := assert type.instanceof(type.Nat(), type.Number()) == true
 
-test_instanceof_negative := assert type.instanceof(type.Int(), type.Float()) = false
+test_instanceof_negative := assert type.instanceof(type.Int(), type.Float()) == false
 
-test_instanceof_type_link := assert type.instanceof(type.Int(), type.Type()) = true
+test_instanceof_type_link := assert type.instanceof(type.Int(), type.Type()) == true
 
-test_instanceof_literal_nat := assert type.instanceof(1, type.Nat()) = true
+test_instanceof_literal_nat := assert type.instanceof(1, type.Nat()) == true
 
-test_instanceof_literal_int := assert type.instanceof(-1, type.Int()) = true
+test_instanceof_literal_int := assert type.instanceof(-1, type.Int()) == true
 
-test_instanceof_literal_neg := assert type.instanceof(-1, type.Nat()) = false
+test_instanceof_literal_neg := assert type.instanceof(-1, type.Nat()) == false
 
-test_instanceof_literal_float := assert type.instanceof(1.5, type.Float()) = true
+test_instanceof_literal_float := assert type.instanceof(1.5, type.Float()) == true
 
-test_is_nominal_kind := assert type.is(1, type.Nat()) = true
+test_is_nominal_kind := assert type.is(1, type.Nat()) == true
 
-test_is_nominal_kind_neg := assert type.is(1, type.Float()) = false
+test_is_nominal_kind_neg := assert type.is(1, type.Float()) == false
 
-test_must_nominal := assert type.must(1, type.Number()) = { ok: 1 }
+test_must_nominal := assert type.must(1, type.Number()) == { ok: 1 }
 
-test_ty_literal := assert type.ty(1) = type.Nat()
+test_ty_literal := assert type.ty(1) == type.Nat()
 
-test_ty_link := assert type.ty(type.Int()) = type.Type()
+test_ty_link := assert type.ty(type.Int()) == type.Type()

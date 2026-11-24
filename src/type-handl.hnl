@@ -62,7 +62,7 @@ do {
   -- canon_kind -- normalize a kind spelling to a canonical `type.of` tag.
   -- Accepts the short/legacy aliases and `type.`-prefixed forms; unknown
   -- spellings pass through unchanged (they simply never match).
-  canon_kind :: k ~> match k {
+  canon_kind := k ~> match k {
     "any": "any", "unknown": "any", "type.any": "any", "type.unknown": "any",
     "never": "never", "type.never": "never",
     "null": "null", "type.null": "null",
@@ -87,7 +87,7 @@ do {
   -- §2: a *nominal* kind argument (`{"__sym__": ...}`) is a type, not a
   -- kind spelling -- `type.is(v, T)` = `type.instanceof(v, T)` (v's
   -- `type` link head, then the `parent` <: walk).
-  kind_is :: [v, kind] ~>
+  kind_is := [v, kind] ~>
     if type.is_nominal(kind) {
       type.instanceof(v, kind)
     } else {
