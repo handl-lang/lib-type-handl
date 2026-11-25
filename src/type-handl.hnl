@@ -36,7 +36,8 @@
 ---   - `field.*`/variant-tag kinds -- the old `typeof.is(v, "field.x")`
 ---     and `typeof.not` variant-complement semantics require object-key
 ---     enumeration / field-existence primitives that do not exist. Those
----     stay on the legacy `typeof` module (`plugin-lib-utils`).
+---     stay on the `typeof` module (spec-driven via `lib-type`'s
+---     `atoms.yaml` + host `typeof_impls()`).
 ---   - `if` conditions admit no `or`/`and` chains (the condition parse
 ---     stops before infix bool ops), so alias normalization is a `match`
 ---     on literal spellings rather than a disjunction.
