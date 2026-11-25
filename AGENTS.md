@@ -9,7 +9,7 @@ Type: pure-handl predicates and kind guards — Handl stdlib port.
 | `src/type-handl.hnl` | the library |
 | `src/type-handl.test.hnl` | the .hnl test suite |
 | `pkg.hnl` | package manifest — `modules: ["type-handl"]` |
-| `scripts/hnl-gate.sh`, `ci.sh` | the gate / bupha entry |
+| `scripts/hnl-gate.sh`, `workflows/gate.yaml` | the gate / bupha entry |
 
 ## Contract
 
